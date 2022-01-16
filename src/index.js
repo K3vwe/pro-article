@@ -1,7 +1,8 @@
 const express = require('express');
-const { ApolloServer, gql } = require('apollo-server-express');
+const { ApolloServer } = require('apollo-server-express');
 const { ApolloServerPluginDrainHttpServer } = require('apollo-server-core');
 const http = require('http');
+const jwt = require('jsonwebtoken');
 
 require('dotenv').config();
 // Database Connection File
@@ -10,6 +11,19 @@ const db = require('./db');
 // Read the port from .env file and if unavaliable use 4000
 const port = process.env.PORT || 4000;
 const DB_HOST = process.env.DB_HOST;
+
+// Get the user info using the JWT
+const getUser = token => {
+    if(token) {
+        try {
+            // Return user information from the JWT
+            return jwt.verify(token, process.env.JWT_SECRET);
+        } catch(err) {
+            // throw error if jwt is not valid
+            throw new Error('Session invalid'); 
+        }
+    }
+}
 
 async function startApolloServer(){
 
@@ -24,9 +38,16 @@ async function startApolloServer(){
     const server = new ApolloServer({
         typeDefs,
         resolvers,
-        context: () =>  {
-            // Add database model to the context
-            return { models }
+        context: ({ req }) =>  {
+            // get th euser token from the request
+            const token = req.header.authorization;
+            // retrieve a user information from the token
+            const user = getUser(token);
+            // log the user info to the console
+            console.log(user);
+
+            // Add database model and the user to the context
+            return { models, user }
         },
         plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
     });
