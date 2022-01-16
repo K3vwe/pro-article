@@ -40,11 +40,13 @@ async function startApolloServer(){
         resolvers,
         context: ({ req }) =>  {
             // get th euser token from the request
-            const token = req.header.authorization;
+            const token = req.headers.authorization;
             // retrieve a user information from the token
             const user = getUser(token);
-            // log the user info to the console
-            console.log(user);
+            if(user) {
+                // log the user info to the console
+                console.log(user);
+            }
 
             // Add database model and the user to the context
             return { models, user }
