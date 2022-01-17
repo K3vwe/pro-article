@@ -9,6 +9,8 @@ module.exports=gql`
         author: User!
         createdAt: DateTime!
         updatedAt: DateTime!
+        favoriteCount: Int!
+        favoritedBy: [User!]
     }
     
     type User {
@@ -17,6 +19,7 @@ module.exports=gql`
         username: String!
         avatar: String!
         notes: [Note!]!
+        favorites: [Note!]!
     }
 
     type Query {
@@ -33,6 +36,7 @@ module.exports=gql`
         updateNote(id: ID!, content: String): Note!
         deleteNote(id: ID!): Boolean!
         signUp(email: String!, username: String!, password: String!): String! 
-        signIn(email: String, username: String, password: String!): String! 
+        signIn(email: String, username: String, password: String!): String!
+        toggleFavorite(id: ID!): Note! 
     }
 `;
