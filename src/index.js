@@ -7,6 +7,9 @@ const jwt = require('jsonwebtoken');
 const helmet = require('helmet');
 const cors = require('cors');
 
+const depthLimit = require('graphql-depth-limit');
+const { createComplexityLimitRule } = require('graphql-validation-complexity');
+
 require('dotenv').config();
 // Database Connection File
 const db = require('./db');
@@ -38,13 +41,14 @@ async function startApolloServer(){
     // add web and GraphQL appllication security
     app.use(helmet());
     app.use(cors());
-    
+
     db.connect(DB_HOST);
 
     const httpServer = http.createServer(app);
     const server = new ApolloServer({
         typeDefs,
         resolvers,
+        validationRules: [depthLimit(5), createComplexityLimitRule(1000)],
         context: ({ req }) =>  {
             // get th euser token from the request
             const token = req.headers.authorization;
