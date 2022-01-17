@@ -4,6 +4,9 @@ const { ApolloServerPluginDrainHttpServer } = require('apollo-server-core');
 const http = require('http');
 const jwt = require('jsonwebtoken');
 
+const helmet = require('helmet');
+const cors = require('cors');
+
 require('dotenv').config();
 // Database Connection File
 const db = require('./db');
@@ -32,6 +35,10 @@ async function startApolloServer(){
     const resolvers = require('./resolvers')
 
     const app = express();
+    // add web and GraphQL appllication security
+    app.use(helmet());
+    app.use(cors());
+    
     db.connect(DB_HOST);
 
     const httpServer = http.createServer(app);
