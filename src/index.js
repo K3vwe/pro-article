@@ -39,7 +39,7 @@ async function startApolloServer(){
 
     const app = express();
     // add web and GraphQL appllication security
-    app.use(helmet());
+    // app.use(helmet());
     app.use(cors());
 
     db.connect(DB_HOST);

@@ -8,6 +8,6 @@ module.exports = {
 
     // Resolve the favoritedBy info for a note when requested
     favoritedBy: async(note, args, { models }) => {
-        return await models.Note.find({ _id: {$in: note.favoritedBy}})
+        return await models.User.find({ _id: {$in: note.favoritedBy}})
     }
 };

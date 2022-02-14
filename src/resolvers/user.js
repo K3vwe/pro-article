@@ -8,6 +8,6 @@ module.exports = {
 
     // Resolve a list of favorites notes by a user
     favorites: async (user, args, { models }) => {
-        return await models.User.find({ favoritedBy: user._id }).sort({_id: -1 });
+        return await models.Note.find({ favoritedBy: user._id }).sort({_id: -1 });
     }
 };
