@@ -20,7 +20,7 @@ module.exports = {
     },
 
     // Mutation to Update Existing Note
-    updateNote: async (parent, {id, content}, { models }) => {
+    updateNote: async (parent, {id, content}, { models, user }) => {
         // Check if a user exists
         if(!user){
             throw new AuthenticationError('You must be signed in to update a note');
