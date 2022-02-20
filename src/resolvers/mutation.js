@@ -131,16 +131,16 @@ module.exports = {
         };
 
         // check to see if the user has already favorited the note
-        const noteCheck = await models.User.findById(id);
-        const hasUser = noteCheck.favoritedBy.indexOf(noteCheck);
+        let noteCheck = await models.Note.findById(id);
+        const hasUser = noteCheck.favoritedBy.indexOf(user.id);
 
         // if the user exists in the list, pull them out and decrement favoriteCount
         if(hasUser >= 0){
-            await models.Note.findByIdAndUpdate(
+            return await models.Note.findByIdAndUpdate(
                 id,
                 {
                     $pull: {
-                        favoritedBy: mongoose.Types.ObjectId(id)
+                        favoritedBy: mongoose.Types.ObjectId(user.id)
                     },
                     $inc: {
                         favoriteCount: -1
